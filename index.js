@@ -4,32 +4,23 @@ const fs = require('fs');
 
 http
   .createServer(function (req, res) {
+    function servePage(file) {
+      fs.readFile(file, function (err, data) {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.write(data);
+        return res.end();
+      });
+    }
     const { url } = req;
     console.log('🚀 ~ file: index.js:8 ~ url:', url);
     if (url === '/') {
-      fs.readFile('index.html', function (err, data) {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.write(data);
-        return res.end();
-      });
+      servePage('index.html');
     } else if (url === '/about') {
-      fs.readFile('about.html', function (err, data) {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.write(data);
-        return res.end();
-      });
+      servePage('about.html');
     } else if (url === '/contact-me') {
-      fs.readFile('contact-me.html', function (err, data) {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.write(data);
-        return res.end();
-      });
+      servePage('contact-me.html');
     } else {
-      fs.readFile('404.html', function (err, data) {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.write(data);
-        return res.end();
-      });
+      servePage('404.html');
     }
   })
   .listen(port);
