@@ -1,26 +1,29 @@
-const http = require('http');
-const port = 8080;
-const fs = require('fs');
+const express = require('express');
+const app = express();
+const path = require('path');
+const router = express.Router();
 
-http
-  .createServer(function (req, res) {
-    function servePage(file) {
-      fs.readFile(file, function (err, data) {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.write(data);
-        return res.end();
-      });
-    }
-    const { url } = req;
-    console.log('🚀 ~ file: index.js:8 ~ url:', url);
-    if (url === '/') {
-      servePage('index.html');
-    } else if (url === '/about') {
-      servePage('about.html');
-    } else if (url === '/contact-me') {
-      servePage('contact-me.html');
-    } else {
-      servePage('404.html');
-    }
-  })
-  .listen(port);
+const PORT = 8080;
+
+router.get('/', function (req, res, next) {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+router.get('/about', function (req, res, next) {
+  res.sendFile(path.join(__dirname, 'about.html'));
+});
+
+router.get('/contact-me', function (req, res, next) {
+  res.sendFile(path.join(__dirname, 'contact-me.html'));
+});
+
+router.all('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '404.html'));
+});
+
+app.use(router);
+
+app.listen(PORT, function (err) {
+  if (err) console.log(err);
+  console.log('Server listening on PORT', PORT);
+});
